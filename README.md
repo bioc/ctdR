@@ -17,6 +17,8 @@
 
 **ctdR** is an R package that identifies chemicals significantly associated with a set of genes using data from the [Comparative Toxicogenomics Database (CTD)](https://ctdbase.org).
 
+> ⭐ **Find ctdR useful?** [**Star it on GitHub**](https://github.com/drake69/ctdR/stargazers) — it takes one second and helps other researchers discover the package.
+
 > 🚧 **Bioconductor status**: *not yet accepted, or under review* — submission [#4232](https://github.com/Bioconductor/Contributions/issues/4232). *Fingers crossed* 🤞. For now, install from GitHub (instructions below).
 
 ## Features
