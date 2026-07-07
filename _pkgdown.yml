@@ -6,6 +6,13 @@ template:
     primary: "#4575B4"
     border-radius: 0.4rem
     btn-border-radius: 0.3rem
+  includes:
+    in_header: |
+      <script>
+        window.vmtrcq = window.vmtrcq || [];
+        window.vmtrc = window.vmtrc || function (){window.vmtrcq.push(Array.prototype.slice.call(arguments))};
+      </script>
+      <script defer src="https://cdn.vemetric.com/main.js" id="vmtrc-scr" data-token="n1JaK1HVym6HnGg6"></script>
 
 home:
   title: ctdR — Chemical Enrichment Analysis using CTD
