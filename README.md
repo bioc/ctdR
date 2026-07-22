@@ -13,9 +13,12 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/drake69/ctdR)](https://github.com/drake69/ctdR/commits/main)
 [![R version](https://img.shields.io/badge/R-%3E%3D%204.5-blue.svg)](https://www.r-project.org/)
 [![Bioconductor dependencies](https://img.shields.io/badge/Bioconductor-dependencies-green.svg)](https://www.bioconductor.org/)
+[![Documentation](https://img.shields.io/badge/docs-pkgdown-blue.svg)](https://drake69.github.io/ctdR/)
 <!-- badges: end -->
 
 **ctdR** is an R package that identifies chemicals significantly associated with a set of genes using data from the [Comparative Toxicogenomics Database (CTD)](https://ctdbase.org).
+
+> 📖 **Documentation, tutorials & function reference**: **[drake69.github.io/ctdR](https://drake69.github.io/ctdR/)** — full package website with articles and examples.
 
 > ⭐ **Find ctdR useful?** [**Star it on GitHub**](https://github.com/drake69/ctdR/stargazers) — it takes one second and helps other researchers discover the package.
 
