@@ -32,12 +32,9 @@ test_that("e2e GSE311566 Dex-vs-DMSO recovers Dexamethasone via GSEA + CAMERA", 
 
     tmp_cache <- file.path(tempdir(), "ctdR_e2e_test")
     dir.create(tmp_cache, recursive = TRUE, showWarnings = FALSE)
-    original_cache_fn <- rappdirs::user_cache_dir
-    assignInNamespace("user_cache_dir", function(...) tmp_cache,
-        ns = "rappdirs")
+    options(ctdR.cache = tmp_cache)
     on.exit({
-        assignInNamespace("user_cache_dir", original_cache_fn,
-            ns = "rappdirs")
+        options(ctdR.cache = NULL)
         unlink(tmp_cache, recursive = TRUE)
     })
 

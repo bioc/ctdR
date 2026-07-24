@@ -45,10 +45,14 @@ enrichment_CTD(
 (default) for auto-detection from \code{rownames(x)}. Only used when
 \code{method} is \code{"CAMERA"} or \code{"GSVA"}.}
 
-\item{pAdjustMethod}{Character. Method for multiple testing correction:
-one of \code{"BH"} (Benjamini-Hochberg, default), \code{"bonferroni"},
-\code{"fdr"} (alias for BH), or \code{"none"}. Not used for
-\code{method = "GSVA"} (which returns scores rather than p-values).}
+\item{pAdjustMethod}{Character. Multiple-testing correction applied to the
+raw p-values, passed to \code{\link[stats]{p.adjust}}. Any value in
+\code{stats::p.adjust.methods} is accepted:
+\code{"holm"}, \code{"hochberg"}, \code{"hommel"}, \code{"bonferroni"},
+\code{"BH"} (Benjamini-Hochberg, the default), \code{"BY"},
+\code{"fdr"} (alias for \code{"BH"}), or \code{"none"}. See
+\code{\link[stats]{p.adjust}} for the meaning of each method. Not used for
+\code{method = "GSVA"} (which returns per-sample scores, not p-values).}
 
 \item{interaction_types}{Character vector of CTD \code{InteractionActions}
 values to retain when building gene sets, or \code{NULL} (default) to

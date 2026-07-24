@@ -1,3 +1,48 @@
+# Changes in version 0.99.7
+
+## New features
+
+* New `CTDFile` class (a `BiocIO::BiocFile` subclass) with an `import()`
+  method on the `BiocIO` generic. `import(CTDFile(path_or_url))` reads a
+  CTD chemical-gene interactions file into a `S4Vectors::DataFrame` of
+  validated human interactions, following the Bioconductor import/export
+  convention.
+
+* New `as_genesets_CTD()` exports the CTD chemical gene sets as a named
+  list keyed by `ChemicalID`, ready for third-party enrichment engines
+  such as `EnrichmentBrowser::sbea()`. Supports `id_type` and
+  `interaction_types`.
+
+* New `ctd_cache()` retrieves the processed cached tables (`"chemicals"`,
+  `"interactions"`) without loading the cache files by hand.
+
+* `import_CTD()` (and `import(CTDFile)`) now accept a local path or a
+  URL. Remote URLs are downloaded and cached via `BiocFileCache`; no
+  default URL is assumed, and a one-time CTD data-licensing reminder is
+  shown on the first remote fetch.
+
+## Changes
+
+* The processed-data cache moved from a `rappdirs` directory of `.rda`
+  files to a `BiocFileCache` store under `tools::R_user_dir("ctdR",
+  "cache")`. `rappdirs` is no longer a dependency.
+
+* `pAdjustMethod` now accepts any value in `stats::p.adjust.methods`
+  (previously restricted to `BH`, `bonferroni`, `fdr`, `none`); its
+  documentation references `stats::p.adjust`.
+
+## Documentation
+
+* The vignette gains an "Interoperability with existing Bioconductor
+  infrastructure" section (reading via `CTDFile`/`import()`, and handing
+  gene sets to `EnrichmentBrowser::sbea()`) plus a note disambiguating
+  the "CTD" acronym.
+
+## Internal
+
+* Test coverage raised (package total about 95%); tests exercise the
+  `interaction_types` filtering branch and the cache and URL error paths.
+
 # Changes in version 0.99.6
 
 ## New features

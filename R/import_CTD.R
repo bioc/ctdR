@@ -25,16 +25,17 @@
 #'   \item Filters interactions to \strong{Homo sapiens} only (OrganismID 9606).
 #'   \item For each chemical, collects the associated Entrez gene IDs.
 #'   \item Maps Entrez IDs to HGNC gene symbols via \pkg{org.Hs.eg.db}.
-#'   \item Saves four cached objects to the user cache directory:
+#'   \item Saves four cached objects via \pkg{BiocFileCache}:
 #'     \code{chemicals}, \code{ChemicalName_GeneEntrezIds},
 #'     \code{ChemicalName_GeneSymbols}, and \code{ctd_interactions}
 #'     (a long-format table of chemical--gene--action triples used by
 #'     \code{enrichment_CTD(interaction_types = ...)}).
 #' }
 #'
-#' The cache is stored under \code{rappdirs::user_cache_dir("ctdR")}. To
-#' re-import (e.g. after downloading a newer CTD release), simply call
-#' \code{import_CTD()} again — existing cache files will be overwritten.
+#' The cache is managed by \pkg{BiocFileCache} under
+#' \code{tools::R_user_dir("ctdR", "cache")}. To re-import (e.g. after
+#' downloading a newer CTD release), simply call \code{import_CTD()} again —
+#' existing cache resources are overwritten.
 #'
 #' Filtering by interaction type (e.g., to retain only
 #' \code{"increases^expression"} interactions) is done at enrichment time via
@@ -42,8 +43,12 @@
 #' not here — so a single import supports any combination of filters without
 #' re-running this step.
 #'
-#' @param file_path Character. Path to the CTD chemical-gene interactions file
-#'   (\code{CTD_chem_gene_ixns.csv} or \code{CTD_chem_gene_ixns.csv.gz}).
+#' @param file_path Character. A local path \strong{or} a URL to the CTD
+#'   chemical-gene interactions file (\code{CTD_chem_gene_ixns.csv} or
+#'   \code{CTD_chem_gene_ixns.csv.gz}). Remote URLs are downloaded and cached
+#'   with \pkg{BiocFileCache}; the package assumes no default URL, so you supply
+#'   the source and a one-time CTD data-licensing reminder is shown on first
+#'   remote fetch.
 #'
 #' @return Invisible \code{NULL}. Called for its side effect of caching the
 #'   processed data.
@@ -58,24 +63,16 @@
 #' )
 #' import_CTD(sample_file)
 #'
-#' @importFrom rappdirs user_cache_dir
+#' @importFrom BiocFileCache bfccache
 #' @export
 import_CTD <- function(file_path) {
-    if (!file.exists(file_path)) {
-        stop("File not found: ", file_path, "\n",
-            "Please download CTD_chem_gene_ixns.csv.gz from:\n",
-            "  https://ctdbase.org/reports/",
-            "CTD_chem_gene_ixns.csv.gz\n",
-            call. = FALSE
-        )
-    }
+    src <- .resolve_ctd_source(file_path)
 
-    cache_dir <- rappdirs::user_cache_dir("ctdR")
-    dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
+    bfc <- .ctd_bfc()
 
     t0 <- proc.time()[["elapsed"]]
 
-    CTD_chem_gene_ixns <- .read_and_validate_ctd(file_path)
+    CTD_chem_gene_ixns <- .read_and_validate_ctd(src)
 
     chemicals_ids <- unique(CTD_chem_gene_ixns$ChemicalID)
     gene_maps <- .map_chemical_genes(CTD_chem_gene_ixns, chemicals_ids)
@@ -85,13 +82,13 @@ import_CTD <- function(file_path) {
 
     interactions <- .build_interaction_table(CTD_chem_gene_ixns)
 
-    .save_ctd_cache(cache_dir, chemicals,
+    .save_ctd_cache(bfc, chemicals,
                     gene_maps$entrez, gene_maps$symbols, interactions)
 
     elapsed <- proc.time()[["elapsed"]] - t0
     message(sprintf(
         "CTD data cached successfully in: %s\n  %d chemicals | %d unique genes | %.0f s",
-        cache_dir,
+        BiocFileCache::bfccache(bfc),
         nrow(chemicals),
         length(unique(interactions$EntrezID)),
         elapsed
@@ -118,7 +115,8 @@ import_CTD <- function(file_path) {
             length(ambiguous), " ChemicalID(s) appear with more than one ",
             "ChemicalName in the CTD file; only the first name per ID is ",
             "retained. Affected IDs: ",
-            paste(head(ambiguous, 5L), collapse = ", "),
+            paste(ambiguous[seq_len(min(5L, length(ambiguous)))],
+                collapse = ", "),
             if (length(ambiguous) > 5L)
                 paste0(" ... (and ", length(ambiguous) - 5L, " more)"),
             call. = FALSE
@@ -243,7 +241,7 @@ import_CTD <- function(file_path) {
 }
 
 #' Save CTD cache files
-#' @param cache_dir Path to the cache directory.
+#' @param bfc A \code{BiocFileCache} object (from \code{.ctd_bfc()}).
 #' @param chemicals Data frame of chemical IDs and names.
 #' @param entrez Named list of Entrez IDs per chemical.
 #' @param symbols Data frame of term-gene symbol mappings.
@@ -251,17 +249,10 @@ import_CTD <- function(file_path) {
 #'   InteractionActions).
 #' @return Invisible \code{NULL}.
 #' @keywords internal
-.save_ctd_cache <- function(cache_dir, chemicals, entrez, symbols,
-    interactions) {
-    ChemicalName_GeneEntrezIds <- entrez
-    ChemicalName_GeneSymbols   <- symbols
-    ctd_interactions           <- interactions
-    save(chemicals,
-        file = file.path(cache_dir, "chemicals.rda"))
-    save(ChemicalName_GeneEntrezIds,
-        file = file.path(cache_dir, "ChemicalName_GeneEntrezIds.rda"))
-    save(ChemicalName_GeneSymbols,
-        file = file.path(cache_dir, "ChemicalName_GeneSymbols.rda"))
-    save(ctd_interactions,
-        file = file.path(cache_dir, "ctd_interactions.rda"))
+.save_ctd_cache <- function(bfc, chemicals, entrez, symbols, interactions) {
+    .ctd_cache_save(bfc, "chemicals", chemicals)
+    .ctd_cache_save(bfc, "ChemicalName_GeneEntrezIds", entrez)
+    .ctd_cache_save(bfc, "ChemicalName_GeneSymbols", symbols)
+    .ctd_cache_save(bfc, "ctd_interactions", interactions)
+    invisible(NULL)
 }

@@ -38,6 +38,14 @@ reference:
       - import_CTD
       - enrichment_CTD
       - plot_CTD
+  - title: "Data access and interoperability"
+    desc: >
+      Read a CTD file the Bioconductor way, retrieve cached tables, and export
+      the CTD gene sets for use with other enrichment engines.
+    contents:
+      - CTDFile
+      - ctd_cache
+      - as_genesets_CTD
   - title: "Package"
     contents:
       - ctdR-package

@@ -78,29 +78,30 @@ test_that("import_CTD caches data correctly", {
     writeLines(c(header_lines, paste(col_names, collapse = ","),
         dummy_row, data_rows), tmp_file)
 
-    # Temporarily override user_cache_dir to use a temp location
+    # Temporarily redirect the cache to a temp location
     tmp_cache <- file.path(tempdir(), "ctdR_test_cache")
-    original_cache_fn <- rappdirs::user_cache_dir
-    assignInNamespace("user_cache_dir", function(...) tmp_cache, ns = "rappdirs")
+    options(ctdR.cache = tmp_cache)
     on.exit({
-        assignInNamespace("user_cache_dir", original_cache_fn, ns = "rappdirs")
+        options(ctdR.cache = NULL)
         unlink(tmp_file)
         unlink(tmp_cache, recursive = TRUE)
     })
 
     expect_message(import_CTD(tmp_file), "Reading CTD")
 
-    expect_true(file.exists(file.path(tmp_cache, "chemicals.rda")))
-    expect_true(file.exists(file.path(tmp_cache, "ChemicalName_GeneEntrezIds.rda")))
-    expect_true(file.exists(file.path(tmp_cache, "ChemicalName_GeneSymbols.rda")))
+    bfc <- ctdR:::.ctd_bfc(tmp_cache)
+    expect_true(ctdR:::.ctd_cache_has(bfc, "chemicals"))
+    expect_true(ctdR:::.ctd_cache_has(bfc, "ChemicalName_GeneEntrezIds"))
+    expect_true(ctdR:::.ctd_cache_has(bfc, "ChemicalName_GeneSymbols"))
 
     # Verify cached data - only human chemicals
-    load(file.path(tmp_cache, "chemicals.rda"))
+    chemicals <- ctdR:::.ctd_cache_load(bfc, "chemicals")
     expect_true("D000082" %in% chemicals$ChemicalID)
     expect_true("D001554" %in% chemicals$ChemicalID)
     expect_false("D001241" %in% chemicals$ChemicalID)
 
-    load(file.path(tmp_cache, "ChemicalName_GeneEntrezIds.rda"))
+    ChemicalName_GeneEntrezIds <- ctdR:::.ctd_cache_load(
+        bfc, "ChemicalName_GeneEntrezIds")
     expect_true("D000082" %in% names(ChemicalName_GeneEntrezIds))
     expect_equal(length(ChemicalName_GeneEntrezIds[["D000082"]]), 2)
 })

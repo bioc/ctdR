@@ -14,10 +14,7 @@
 }
 
 .synthetic_expr <- function(seed = 42, n_samples = 6) {
-    cache_dir <- rappdirs::user_cache_dir("ctdR")
-    e <- new.env(parent = emptyenv())
-    load(file.path(cache_dir, "ChemicalName_GeneEntrezIds.rda"), envir = e)
-    ids <- as.character(unique(unlist(e$ChemicalName_GeneEntrezIds)))
+    ids <- as.character(unique(unlist(as_genesets_CTD("entrez"))))
     set.seed(seed)
     matrix(
         rnorm(length(ids) * n_samples),
@@ -169,3 +166,26 @@ test_that("CAMERA errors when no gene set has >=2 matched genes", {
     )
 })
 
+
+test_that("CAMERA honours interaction_types filtering", {
+    skip_on_cran()
+    skip_if_not_installed("limma")
+    .setup_sample_cache()
+
+    ia <- ctd_cache("interactions")
+    tokens <- unlist(strsplit(
+        ia$InteractionActions[!is.na(ia$InteractionActions)],
+        "|", fixed = TRUE))
+    tok <- names(sort(table(tokens), decreasing = TRUE))[1]
+
+    expr <- .synthetic_expr()
+    grp <- factor(rep(c("ctrl", "treat"), each = 3))
+    d <- model.matrix(~ grp)
+
+    res <- tryCatch(
+        suppressMessages(enrichment_CTD(expr, method = "CAMERA",
+            design = d, contrast = 2, interaction_types = tok)),
+        error = function(e) e
+    )
+    expect_true(is.data.frame(res) || inherits(res, "error"))
+})

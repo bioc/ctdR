@@ -4,10 +4,10 @@
 \alias{.save_ctd_cache}
 \title{Save CTD cache files}
 \usage{
-.save_ctd_cache(cache_dir, chemicals, entrez, symbols, interactions)
+.save_ctd_cache(bfc, chemicals, entrez, symbols, interactions)
 }
 \arguments{
-\item{cache_dir}{Path to the cache directory.}
+\item{bfc}{A \code{BiocFileCache} object (from \code{.ctd_bfc()}).}
 
 \item{chemicals}{Data frame of chemical IDs and names.}
 

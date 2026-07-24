@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="index.html">ctdR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,14 @@
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="articles/ctdR.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Tutorials</h6></li>
+    <li><a class="dropdown-item" href="articles/tutorial_rnaseq_workflow.html">From RNA-seq to chemical enrichment: a complete workflow</a></li>
+  </ul>
+</li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news">
@@ -63,6 +71,12 @@
 <!-- badges: start -->
 
 <p><strong>ctdR</strong> is an R package that identifies chemicals significantly associated with a set of genes using data from the <a href="https://ctdbase.org" class="external-link">Comparative Toxicogenomics Database (CTD)</a>.</p>
+<blockquote>
+<p>⭐ <strong>Find ctdR useful?</strong> <a href="https://github.com/drake69/ctdR/stargazers" class="external-link"><strong>Star it on GitHub</strong></a> — it takes one second and helps other researchers discover the package.</p>
+</blockquote>
+<blockquote>
+<p>🚧 <strong>Bioconductor status</strong>: <em>not yet accepted, or under review</em> — submission <a href="https://github.com/Bioconductor/Contributions/issues/4232" class="external-link">#4232</a>. <em>Fingers crossed</em> 🤞. For now, install from GitHub (instructions below).</p>
+</blockquote>
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
 </h2>
@@ -108,29 +122,33 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
+<blockquote>
+<p><strong>Status</strong>: ctdR is currently under review for inclusion in Bioconductor (<a href="https://github.com/Bioconductor/Contributions/issues/4232" class="external-link">Bioconductor/Contributions#4232</a>) — <em>not on Bioconductor yet, fingers crossed</em> 🤞. Until then, please install from GitHub.</p>
+</blockquote>
 <div class="section level3">
-<h3 id="from-bioconductor">From Bioconductor<a class="anchor" aria-label="anchor" href="#from-bioconductor"></a>
+<h3 id="from-github-current-installation-method">From GitHub (current installation method)<a class="anchor" aria-label="anchor" href="#from-github-current-installation-method"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"ctdR"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="from-github-development-version">From GitHub (development version)<a class="anchor" aria-label="anchor" href="#from-github-development-version"></a>
-</h3>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/install-deprecated.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"drake69/ctdR"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="bioconductor-dependencies">Bioconductor dependencies<a class="anchor" aria-label="anchor" href="#bioconductor-dependencies"></a>
 </h3>
-<p>ctdR depends on several Bioconductor packages. If they are not installed automatically, run:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fgsea"</span>, <span class="st">"org.Hs.eg.db"</span>, <span class="st">"clusterProfiler"</span>,</span>
+<p>ctdR depends on several Bioconductor packages. They are pulled in automatically by <code>install_github()</code>, but you can install them upfront with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fgsea"</span>, <span class="st">"org.Hs.eg.db"</span>, <span class="st">"clusterProfiler"</span>,</span>
 <span>                       <span class="st">"AnnotationDbi"</span>, <span class="st">"limma"</span>, <span class="st">"GSVA"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="from-bioconductor-once-accepted">From Bioconductor (once accepted)<a class="anchor" aria-label="anchor" href="#from-bioconductor-once-accepted"></a>
+</h3>
+<p>Once ctdR is accepted into Bioconductor (currently under review — <em>fingers crossed</em> 🤞), it will be installable directly via:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"ctdR"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -220,6 +238,15 @@
 <span><span class="co"># GSVA: heatmap of the top-variance chemicals across samples</span></span>
 <span><span class="fu"><a href="reference/plot_CTD.html">plot_CTD</a></span><span class="op">(</span><span class="va">gsva_scores</span><span class="op">)</span></span></code></pre></div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="end-to-end-runnable-example">End-to-end runnable example<a class="anchor" aria-label="anchor" href="#end-to-end-runnable-example"></a>
+</h2>
+<p>For a production-shaped reference pipeline — full GSE311566 Female PBMCs dataset (Dex vs DMSO), a-priori power analysis, declared significance thresholds, <code>limma</code> differential expression, and all four enrichment methods with BH-adjusted alpha cutoffs — see:</p>
+<pre><code><span><span class="va">inst</span><span class="op">/</span><span class="va">scripts</span><span class="op">/</span><span class="va">example_gse311566_full_pipeline.R</span></span></code></pre>
+<p>Run it from the package root after installing ctdR and populating the CTD cache (<code><a href="reference/import_CTD.html">import_CTD()</a></code>):</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="ex">Rscript</span> inst/scripts/example_gse311566_full_pipeline.R</span></code></pre></div>
+<p>Outputs (DE table, per-method significant chemicals, plots, power report, <code>sessionInfo</code>) land in <code>./example_outputs/</code>. This script is the example referenced by the companion paper; the vignette covers the same workflow on a bundled subset (~34 KB, no alpha cutoffs) for didactic purposes and BiocCheck-friendly build times.</p>
 </div>
 <div class="section level2">
 <h2 id="input-format">Input Format<a class="anchor" aria-label="anchor" href="#input-format"></a>
@@ -490,7 +517,7 @@
 <p>If you use ctdR in your research, please cite:</p>
 <pre><code>Corsaro L (2026). ctdR: Enrichment Analysis of Chemical-Gene Interactions
 from the Comparative Toxicogenomics Database. R package version 0.99.2.
-doi: 10.5281/zenodo.19344201. https://github.com/drake69/ctdR</code></pre>
+doi: 10.5281/zenodo.19344200. https://github.com/drake69/ctdR</code></pre>
 <p>Additionally, please cite CTD as required by their <a href="https://ctdbase.org/about/legal.jsp" class="external-link">Terms of Service</a>:</p>
 <blockquote>
 <p>Davis AP, Wiegers TC, Johnson RJ, Sciaky D, Wiegers J, Mattingly CJ. Comparative Toxicogenomics Database (CTD): update 2023. <em>Nucleic Acids Research</em>. 2023;51(D1):D1257-D1262.</p>
@@ -549,7 +576,7 @@ doi: 10.5281/zenodo.19344201. https://github.com/drake69/ctdR</code></pre>
 <li><a href="https://codecov.io/gh/drake69/ctdR" class="external-link"><img src="https://codecov.io/gh/drake69/ctdR/branch/main/graph/badge.svg" alt="Codecov"></a></li>
 <li><a href="https://github.com/drake69/ctdR/actions/workflows/security.yaml" class="external-link"><img src="https://github.com/drake69/ctdR/actions/workflows/security.yaml/badge.svg?branch=main" alt="security-scan"></a></li>
 <li><a href="https://opensource.org/licenses/Apache-2.0" class="external-link"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License: Apache 2.0"></a></li>
-<li><a href="https://doi.org/10.5281/zenodo.19344201" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.19344201.svg" alt="DOI"></a></li>
+<li><a href="https://doi.org/10.5281/zenodo.19344200" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.19344200.svg" alt="DOI"></a></li>
 <li><a href="https://github.com/drake69/ctdR/issues" class="external-link"><img src="https://img.shields.io/github/issues/drake69/ctdR" alt="GitHub issues"></a></li>
 <li><a href="https://github.com/drake69/ctdR/stargazers" class="external-link"><img src="https://img.shields.io/github/stars/drake69/ctdR" alt="GitHub stars"></a></li>
 <li><a href="https://github.com/drake69/ctdR/commits/main" class="external-link"><img src="https://img.shields.io/github/last-commit/drake69/ctdR" alt="GitHub last commit"></a></li>

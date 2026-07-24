@@ -124,8 +124,8 @@ import_CTD(sample_file)
 3. Collects Entrez gene IDs for each chemical.
 4. Maps Entrez IDs to HGNC gene symbols via
     `org.Hs.eg.db`.
-5. Caches the processed data locally
-    (under `rappdirs::user_cache_dir("ctdR")`).
+5. Caches the processed data locally via `BiocFileCache`
+    (under `tools::R_user_dir("ctdR", "cache")`).
 
 This step takes several minutes with the full CTD file.
 You only need to run it once -- or again when you
@@ -525,6 +525,65 @@ inflated false-positive rate that ORA/GSEA exhibit on
 strongly co-regulated gene sets; **GSVA** when you want a
 per-sample score to feed into downstream analyses
 (clustering, survival, correlation with phenotypes).
+
+# Interoperability with existing Bioconductor infrastructure
+
+`ctdR`'s contribution is the CTD chemical-gene sets and a unified
+interface; the statistical tests themselves are delegated to
+established engines (`clusterProfiler`, `fgsea`, `limma`, `GSVA`).
+If you would rather run the CTD gene sets through a different engine,
+`ctdR` exposes them directly.
+
+## Reading a CTD file the `BiocIO` way
+
+Besides `import_CTD()` (which processes and caches the data), a CTD
+file can be read into memory using the standard Bioconductor `import()`
+generic via the `CTDFile` class -- so the file behaves like any other
+`BiocFile`:
+
+```{r ctdfile, eval=FALSE}
+library(BiocIO)
+ctd <- import(CTDFile("~/Downloads/CTD_chem_gene_ixns.csv"))
+head(ctd)
+```
+
+## Handing the CTD gene sets to another engine
+
+`as_genesets_CTD()` returns the chemical gene sets as a named list, in
+the exact shape expected by, for example, the `gs` argument of
+`EnrichmentBrowser::sbea()`. `ctdR` does **not** depend on
+`EnrichmentBrowser` -- you supply it.
+
+```{r asgenesets}
+gene_sets <- as_genesets_CTD("entrez")
+length(gene_sets)
+gene_sets[[1]]
+```
+
+```{r sbea, eval=FALSE}
+# Illustrative: route the CTD gene sets through EnrichmentBrowser's
+# set-based engine. sbea() covers ora / gsea / camera (but not GSVA,
+# which is a per-sample scoring method with no sbea equivalent).
+library(EnrichmentBrowser)
+res <- sbea(method = "camera", se = my_se, gs = as_genesets_CTD("entrez"))
+gsRanking(res)
+```
+
+The named list is also a one-line conversion away from a
+`GeneSetCollection` (`GSEABase::GeneSetCollection()`), for tools that
+expect that container.
+
+# Naming and scope: the "CTD" acronym
+
+In `ctdR`, **CTD** always means the *Comparative Toxicogenomics
+Database* (<https://ctdbase.org>). The same acronym denotes unrelated
+things elsewhere in the R ecosystem: the CRAN package **CTD**
+("Connect The Dots") is a graph algorithm for metabolomic and
+transcriptomic perturbations, and in **EWCE** a `ctd` object is a
+*CellTypeDataset*. `ctdR` is unrelated to both. The `CTDFile` class is
+named to avoid this collision -- and to avoid `CTDData`, the class of
+the CTD-specific package `CTDquerier`, which was removed from
+Bioconductor at release 3.12.
 
 # Updating the CTD data
 

@@ -34,17 +34,12 @@ NULL
 #' @keywords internal
 .load_geneset_list <- function(id_type, cache_dir) {
     id_type <- match.arg(id_type, c("entrez", "symbol"))
+    bfc <- .ctd_bfc(cache_dir)
     if (id_type == "entrez") {
-        e <- new.env(parent = emptyenv())
-        load(file.path(cache_dir, "ChemicalName_GeneEntrezIds.rda"),
-            envir = e)
-        gs <- e$ChemicalName_GeneEntrezIds
+        gs <- .ctd_cache_load(bfc, "ChemicalName_GeneEntrezIds")
         gs <- lapply(gs, as.character)
     } else {
-        e <- new.env(parent = emptyenv())
-        load(file.path(cache_dir, "ChemicalName_GeneSymbols.rda"),
-            envir = e)
-        df <- e$ChemicalName_GeneSymbols
+        df <- .ctd_cache_load(bfc, "ChemicalName_GeneSymbols")
         df <- df[!is.na(df$gene) & nzchar(df$gene), , drop = FALSE]
         gs <- split(as.character(df$gene), as.character(df$term))
     }
