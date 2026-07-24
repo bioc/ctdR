@@ -74,3 +74,29 @@ test_that("import_CTD works from a file:// URL", {
         ctdR:::.ctd_cache_has(ctdR:::.ctd_bfc(tmp_cache), "chemicals")
     )
 })
+
+test_that(".resolve_ctd_source returns a cached path for an already-seen URL", {
+    sf <- system.file(
+        "extdata", "CTD_chem_gene_ixns_sample.csv", package = "ctdR"
+    )
+    skip_if(sf == "", "sample CTD file not installed")
+
+    tmp_cache <- file.path(tempdir(), "ctdR_url_cached")
+    options(ctdR.cache = tmp_cache)
+    env <- ctdR:::.ctdR_env
+    env$license_shown <- FALSE
+    on.exit({
+        options(ctdR.cache = NULL)
+        env$license_shown <- FALSE
+        unlink(tmp_cache, recursive = TRUE)
+    })
+
+    url <- "https://ctdbase.org/reports/CTD_chem_gene_ixns.csv.gz"
+    bfc <- ctdR:::.ctd_bfc(tmp_cache)
+    # Pre-seed a resource under the URL name so resolution finds it without
+    # a network download (exercises the reminder + cache-hit return path).
+    ctdR:::.ctd_cache_save(bfc, url, readLines(sf, n = 1L))
+
+    resolved <- suppressMessages(ctdR:::.resolve_ctd_source(url))
+    expect_true(file.exists(resolved))
+})

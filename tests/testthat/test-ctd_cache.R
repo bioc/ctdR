@@ -48,3 +48,10 @@ test_that("ctd_cache() errors when the cache is absent", {
         "not found"
     )
 })
+
+test_that(".ctd_cache_load errors on a missing resource", {
+    empty <- tempfile("ctdR-cache-load-")
+    dir.create(empty)
+    bfc <- ctdR:::.ctd_bfc(empty)
+    expect_error(ctdR:::.ctd_cache_load(bfc, "chemicals"), "not found")
+})

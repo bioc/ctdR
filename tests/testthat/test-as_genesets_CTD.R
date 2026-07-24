@@ -69,3 +69,21 @@ test_that("as_genesets_CTD() honours interaction_types filtering", {
     expect_type(filtered, "list")
     expect_true(length(filtered) <= length(all_sets))
 })
+
+test_that("as_genesets_CTD('symbol') honours interaction_types filtering", {
+    skip_on_cran()
+    .setup_sample_cache()
+
+    ia <- ctd_cache("interactions")
+    tokens <- unlist(strsplit(
+        ia$InteractionActions[!is.na(ia$InteractionActions)],
+        "|", fixed = TRUE))
+    tok <- names(sort(table(tokens), decreasing = TRUE))[1]
+
+    gs <- suppressMessages(
+        as_genesets_CTD("symbol", interaction_types = tok))
+    expect_type(gs, "list")
+    if (length(unlist(gs))) {
+        expect_false(all(grepl("^[0-9]+$", unlist(gs))))
+    }
+})
