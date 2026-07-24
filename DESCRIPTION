@@ -38,7 +38,10 @@ Imports:
     plyr,
     limma,
     GSVA,
-    stats
+    stats,
+    BiocIO,
+    S4Vectors,
+    methods
 Suggests:
     testthat (>= 3.0.0),
     knitr,
