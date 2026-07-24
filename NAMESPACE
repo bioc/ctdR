@@ -2,6 +2,7 @@
 
 export(CTDFile)
 export(as_genesets_CTD)
+export(ctd_cache)
 export(enrichment_CTD)
 export(import_CTD)
 export(plot_CTD)

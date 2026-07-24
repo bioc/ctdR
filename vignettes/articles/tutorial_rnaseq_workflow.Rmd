@@ -550,12 +550,10 @@ dex_camera <- local({
 ```{r dex-recap-gsva}
 dex_gsva <- local({
     # GSVA rownames are ChemicalIDs (e.g. "D003907"), not names.
-    # Load the chemicals metadata to map name -> ID.
-    e <- new.env(parent = emptyenv())
-    load(file.path(rappdirs::user_cache_dir("ctdR"), "chemicals.rda"),
-         envir = e)
-    dex_id <- e$chemicals$ChemicalID[
-        tolower(e$chemicals$ChemicalName) == "dexamethasone"
+    # Retrieve the chemicals metadata from the cache to map name -> ID.
+    chem <- ctd_cache("chemicals")
+    dex_id <- chem$ChemicalID[
+        tolower(chem$ChemicalName) == "dexamethasone"
     ]
     if (length(dex_id) == 0L || !dex_id %in% rownames(gsva_scores))
         return(NULL)
