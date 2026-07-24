@@ -30,16 +30,17 @@ Processing steps performed by \code{import_CTD}:
   \item Filters interactions to \strong{Homo sapiens} only (OrganismID 9606).
   \item For each chemical, collects the associated Entrez gene IDs.
   \item Maps Entrez IDs to HGNC gene symbols via \pkg{org.Hs.eg.db}.
-  \item Saves four cached objects to the user cache directory:
+  \item Saves four cached objects via \pkg{BiocFileCache}:
     \code{chemicals}, \code{ChemicalName_GeneEntrezIds},
     \code{ChemicalName_GeneSymbols}, and \code{ctd_interactions}
     (a long-format table of chemical--gene--action triples used by
     \code{enrichment_CTD(interaction_types = ...)}).
 }
 
-The cache is stored under \code{rappdirs::user_cache_dir("ctdR")}. To
-re-import (e.g. after downloading a newer CTD release), simply call
-\code{import_CTD()} again — existing cache files will be overwritten.
+The cache is managed by \pkg{BiocFileCache} under
+\code{tools::R_user_dir("ctdR", "cache")}. To re-import (e.g. after
+downloading a newer CTD release), simply call \code{import_CTD()} again —
+existing cache resources are overwritten.
 
 Filtering by interaction type (e.g., to retain only
 \code{"increases^expression"} interactions) is done at enrichment time via

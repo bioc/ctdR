@@ -61,7 +61,7 @@ test_that(".validate_expr_matrix rejects duplicated rownames", {
 test_that(".load_geneset_list returns named list for entrez", {
     skip_on_cran()
     .setup_sample_cache_utils()
-    cache_dir <- rappdirs::user_cache_dir("ctdR")
+    cache_dir <- ctdR:::.ctd_cache_dir()
     gs <- ctdR:::.load_geneset_list("entrez", cache_dir)
     expect_true(is.list(gs))
     expect_true(length(gs) > 0)
@@ -71,7 +71,7 @@ test_that(".load_geneset_list returns named list for entrez", {
 test_that(".load_geneset_list returns named list for symbol", {
     skip_on_cran()
     .setup_sample_cache_utils()
-    cache_dir <- rappdirs::user_cache_dir("ctdR")
+    cache_dir <- ctdR:::.ctd_cache_dir()
     gs <- ctdR:::.load_geneset_list("symbol", cache_dir)
     expect_true(is.list(gs))
     expect_true(length(gs) > 0)
@@ -82,7 +82,7 @@ test_that("enrichment_CTD works with SYMBOL rownames via id_type='symbol'", {
     skip_on_cran()
     skip_if_not_installed("limma")
     .setup_sample_cache_utils()
-    cache_dir <- rappdirs::user_cache_dir("ctdR")
+    cache_dir <- ctdR:::.ctd_cache_dir()
     gs <- ctdR:::.load_geneset_list("symbol", cache_dir)
     syms <- as.character(unique(unlist(gs)))
     syms <- syms[!is.na(syms) & nzchar(syms)]

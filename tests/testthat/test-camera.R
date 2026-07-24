@@ -14,10 +14,7 @@
 }
 
 .synthetic_expr <- function(seed = 42, n_samples = 6) {
-    cache_dir <- rappdirs::user_cache_dir("ctdR")
-    e <- new.env(parent = emptyenv())
-    load(file.path(cache_dir, "ChemicalName_GeneEntrezIds.rda"), envir = e)
-    ids <- as.character(unique(unlist(e$ChemicalName_GeneEntrezIds)))
+    ids <- as.character(unique(unlist(as_genesets_CTD("entrez"))))
     set.seed(seed)
     matrix(
         rnorm(length(ids) * n_samples),

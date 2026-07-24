@@ -7,7 +7,7 @@
 as_genesets_CTD(
   id_type = c("entrez", "symbol"),
   interaction_types = NULL,
-  cache_dir = rappdirs::user_cache_dir("ctdR")
+  cache_dir = .ctd_cache_dir()
 )
 }
 \arguments{

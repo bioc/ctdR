@@ -124,8 +124,8 @@ import_CTD(sample_file)
 3. Collects Entrez gene IDs for each chemical.
 4. Maps Entrez IDs to HGNC gene symbols via
     `org.Hs.eg.db`.
-5. Caches the processed data locally
-    (under `rappdirs::user_cache_dir("ctdR")`).
+5. Caches the processed data locally via `BiocFileCache`
+    (under `tools::R_user_dir("ctdR", "cache")`).
 
 This step takes several minutes with the full CTD file.
 You only need to run it once -- or again when you

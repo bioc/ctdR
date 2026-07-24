@@ -31,7 +31,6 @@ Imports:
     fgsea,
     ggplot2,
     readr,
-    rappdirs,
     org.Hs.eg.db,
     clusterProfiler,
     AnnotationDbi,
@@ -40,6 +39,7 @@ Imports:
     GSVA,
     stats,
     BiocIO,
+    BiocFileCache,
     S4Vectors,
     methods
 Suggests:

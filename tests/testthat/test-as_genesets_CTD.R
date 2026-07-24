@@ -41,7 +41,7 @@ test_that("as_genesets_CTD() matches the internal loader (parity)", {
     skip_on_cran()
     .setup_sample_cache()
 
-    cache_dir <- rappdirs::user_cache_dir("ctdR")
+    cache_dir <- ctdR:::.ctd_cache_dir()
     expect_identical(
         as_genesets_CTD("entrez"),
         ctdR:::.load_geneset_list("entrez", cache_dir)

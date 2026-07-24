@@ -52,15 +52,13 @@
 #' gsRanking(res)
 #' }
 #'
-#' @importFrom rappdirs user_cache_dir
 #' @export
 as_genesets_CTD <- function(id_type = c("entrez", "symbol"),
     interaction_types = NULL,
-    cache_dir = rappdirs::user_cache_dir("ctdR")) {
+    cache_dir = .ctd_cache_dir()) {
     id_type <- match.arg(id_type)
 
-    entrez_cache <- file.path(cache_dir, "ChemicalName_GeneEntrezIds.rda")
-    if (!file.exists(entrez_cache)) {
+    if (!.ctd_cache_has(.ctd_bfc(cache_dir), "ChemicalName_GeneEntrezIds")) {
         stop("CTD cache not found in '", cache_dir, "'.\n",
             "Run import_CTD() on your CTD_chem_gene_ixns file first.",
             call. = FALSE

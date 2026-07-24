@@ -4,10 +4,7 @@
 \alias{ctd_cache}
 \title{Retrieve Cached CTD Data}
 \usage{
-ctd_cache(
-  what = c("chemicals", "interactions"),
-  cache_dir = rappdirs::user_cache_dir("ctdR")
-)
+ctd_cache(what = c("chemicals", "interactions"), cache_dir = .ctd_cache_dir())
 }
 \arguments{
 \item{what}{Which cached table to return:

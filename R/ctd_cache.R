@@ -33,26 +33,20 @@
 #' chem <- ctd_cache("chemicals")
 #' head(chem)
 #'
-#' @importFrom rappdirs user_cache_dir
 #' @export
 ctd_cache <- function(what = c("chemicals", "interactions"),
-    cache_dir = rappdirs::user_cache_dir("ctdR")) {
+    cache_dir = .ctd_cache_dir()) {
     what <- match.arg(what)
-    file <- switch(what,
-        chemicals    = "chemicals.rda",
-        interactions = "ctd_interactions.rda"
+    rname <- switch(what,
+        chemicals    = "chemicals",
+        interactions = "ctd_interactions"
     )
-    path <- file.path(cache_dir, file)
-    if (!file.exists(path)) {
-        stop("CTD cache file '", file, "' not found in '", cache_dir, "'.\n",
-            "Run import_CTD() on your CTD_chem_gene_ixns file first.",
+    bfc <- .ctd_bfc(cache_dir)
+    if (!.ctd_cache_has(bfc, rname)) {
+        stop("CTD cache resource '", rname, "' not found in '", cache_dir,
+            "'.\nRun import_CTD() on your CTD_chem_gene_ixns file first.",
             call. = FALSE
         )
     }
-    e <- new.env(parent = emptyenv())
-    load(path, envir = e)
-    switch(what,
-        chemicals    = e$chemicals,
-        interactions = e$ctd_interactions
-    )
+    .ctd_cache_load(bfc, rname)
 }

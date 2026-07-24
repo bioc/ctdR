@@ -29,14 +29,13 @@ test_that("enrichment_CTD ORA path works with cached data", {
         CHEM2 = c(4609, 3845, 207)
     )
 
-    save(chemicals, file = file.path(tmp_cache, "chemicals.rda"))
-    save(ChemicalName_GeneSymbols, file = file.path(tmp_cache, "ChemicalName_GeneSymbols.rda"))
-    save(ChemicalName_GeneEntrezIds, file = file.path(tmp_cache, "ChemicalName_GeneEntrezIds.rda"))
-
-    original_cache_fn <- rappdirs::user_cache_dir
-    assignInNamespace("user_cache_dir", function(...) tmp_cache, ns = "rappdirs")
+    options(ctdR.cache = tmp_cache)
+    bfc <- ctdR:::.ctd_bfc(tmp_cache)
+    ctdR:::.ctd_cache_save(bfc, "chemicals", chemicals)
+    ctdR:::.ctd_cache_save(bfc, "ChemicalName_GeneSymbols", ChemicalName_GeneSymbols)
+    ctdR:::.ctd_cache_save(bfc, "ChemicalName_GeneEntrezIds", ChemicalName_GeneEntrezIds)
     on.exit({
-        assignInNamespace("user_cache_dir", original_cache_fn, ns = "rappdirs")
+        options(ctdR.cache = NULL)
         unlink(tmp_cache, recursive = TRUE)
     })
 
@@ -86,13 +85,12 @@ test_that("enrichment_CTD GSEA path works with cached data", {
         CHEM2 = c(50, 51, 52, 53, 54)
     )
 
-    save(chemicals, file = file.path(tmp_cache, "chemicals.rda"))
-    save(ChemicalName_GeneEntrezIds, file = file.path(tmp_cache, "ChemicalName_GeneEntrezIds.rda"))
-
-    original_cache_fn <- rappdirs::user_cache_dir
-    assignInNamespace("user_cache_dir", function(...) tmp_cache, ns = "rappdirs")
+    options(ctdR.cache = tmp_cache)
+    bfc <- ctdR:::.ctd_bfc(tmp_cache)
+    ctdR:::.ctd_cache_save(bfc, "chemicals", chemicals)
+    ctdR:::.ctd_cache_save(bfc, "ChemicalName_GeneEntrezIds", ChemicalName_GeneEntrezIds)
     on.exit({
-        assignInNamespace("user_cache_dir", original_cache_fn, ns = "rappdirs")
+        options(ctdR.cache = NULL)
         unlink(tmp_cache, recursive = TRUE)
     })
 
@@ -133,13 +131,12 @@ test_that("enrichment_CTD GSEA applies pAdjustMethod correctly", {
         CHEM2 = c(50, 51, 52, 53, 54)
     )
 
-    save(chemicals, file = file.path(tmp_cache, "chemicals.rda"))
-    save(ChemicalName_GeneEntrezIds, file = file.path(tmp_cache, "ChemicalName_GeneEntrezIds.rda"))
-
-    original_cache_fn <- rappdirs::user_cache_dir
-    assignInNamespace("user_cache_dir", function(...) tmp_cache, ns = "rappdirs")
+    options(ctdR.cache = tmp_cache)
+    bfc <- ctdR:::.ctd_bfc(tmp_cache)
+    ctdR:::.ctd_cache_save(bfc, "chemicals", chemicals)
+    ctdR:::.ctd_cache_save(bfc, "ChemicalName_GeneEntrezIds", ChemicalName_GeneEntrezIds)
     on.exit({
-        assignInNamespace("user_cache_dir", original_cache_fn, ns = "rappdirs")
+        options(ctdR.cache = NULL)
         unlink(tmp_cache, recursive = TRUE)
     })
 
@@ -183,13 +180,12 @@ test_that("enrichment_CTD GSEA handles NA EntrezID values", {
         CHEM1 = c(1, 2, 3, 4, 5)
     )
 
-    save(chemicals, file = file.path(tmp_cache, "chemicals.rda"))
-    save(ChemicalName_GeneEntrezIds, file = file.path(tmp_cache, "ChemicalName_GeneEntrezIds.rda"))
-
-    original_cache_fn <- rappdirs::user_cache_dir
-    assignInNamespace("user_cache_dir", function(...) tmp_cache, ns = "rappdirs")
+    options(ctdR.cache = tmp_cache)
+    bfc <- ctdR:::.ctd_bfc(tmp_cache)
+    ctdR:::.ctd_cache_save(bfc, "chemicals", chemicals)
+    ctdR:::.ctd_cache_save(bfc, "ChemicalName_GeneEntrezIds", ChemicalName_GeneEntrezIds)
     on.exit({
-        assignInNamespace("user_cache_dir", original_cache_fn, ns = "rappdirs")
+        options(ctdR.cache = NULL)
         unlink(tmp_cache, recursive = TRUE)
     })
 

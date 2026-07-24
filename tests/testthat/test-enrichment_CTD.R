@@ -2,10 +2,9 @@ test_that("enrichment_CTD errors when CTD data not imported", {
     # Temporarily override user_cache_dir to an empty temp dir
     tmp_cache <- file.path(tempdir(), "ctdR_empty_cache")
     dir.create(tmp_cache, showWarnings = FALSE)
-    original_cache_fn <- rappdirs::user_cache_dir
-    assignInNamespace("user_cache_dir", function(...) tmp_cache, ns = "rappdirs")
+    options(ctdR.cache = tmp_cache)
     on.exit({
-        assignInNamespace("user_cache_dir", original_cache_fn, ns = "rappdirs")
+        options(ctdR.cache = NULL)
         unlink(tmp_cache, recursive = TRUE)
     })
 
@@ -35,10 +34,9 @@ test_that("enrichment_CTD errors on invalid pAdjustMethod", {
 test_that("enrichment_CTD error mentions download URL", {
     tmp_cache <- file.path(tempdir(), "ctdR_empty_cache2")
     dir.create(tmp_cache, showWarnings = FALSE)
-    original_cache_fn <- rappdirs::user_cache_dir
-    assignInNamespace("user_cache_dir", function(...) tmp_cache, ns = "rappdirs")
+    options(ctdR.cache = tmp_cache)
     on.exit({
-        assignInNamespace("user_cache_dir", original_cache_fn, ns = "rappdirs")
+        options(ctdR.cache = NULL)
         unlink(tmp_cache, recursive = TRUE)
     })
 

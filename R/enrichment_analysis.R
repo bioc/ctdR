@@ -136,7 +136,6 @@
 #' # GSVA: per-sample enrichment scores
 #' gsva_scores <- enrichment_CTD(expr, method = "GSVA")
 #'
-#' @importFrom rappdirs user_cache_dir
 #' @export
 enrichment_CTD <- function(x,
     method = c("ORA", "GSEA", "CAMERA", "GSVA"),
@@ -152,14 +151,12 @@ enrichment_CTD <- function(x,
         stop("Argument 'x' is required.", call. = FALSE)
     }
     method <- match.arg(method)
-    cache_dir <- rappdirs::user_cache_dir("ctdR")
+    cache_dir <- .ctd_cache_dir()
 
     .validate_enrichment_args(x, method, design, contrast,
         pAdjustMethod, cache_dir)
 
-    e <- new.env(parent = emptyenv())
-    load(file = file.path(cache_dir, "chemicals.rda"), envir = e)
-    chemicals <- e$chemicals
+    chemicals <- .ctd_cache_load(.ctd_bfc(cache_dir), "chemicals")
 
     switch(method,
         ORA = .run_ora(x, chemicals, cache_dir, pAdjustMethod,
@@ -213,8 +210,7 @@ enrichment_CTD <- function(x,
         )
     }
 
-    rda_path <- file.path(cache_dir, "ChemicalName_GeneEntrezIds.rda")
-    if (!file.exists(rda_path)) {
+    if (!.ctd_cache_has(.ctd_bfc(cache_dir), "ChemicalName_GeneEntrezIds")) {
         stop(
             "CTD data not found. Please:\n",
             "  1. Download CTD_chem_gene_ixns.csv.gz from\n",
@@ -271,9 +267,8 @@ enrichment_CTD <- function(x,
         if (!is.null(interaction_types)) {
             entrez_list <- .filter_gene_sets(cache_dir, interaction_types)$entrez
         } else {
-            e <- new.env(parent = emptyenv())
-            load(file.path(cache_dir, "ChemicalName_GeneEntrezIds.rda"), envir = e)
-            entrez_list <- e$ChemicalName_GeneEntrezIds
+            entrez_list <- .ctd_cache_load(
+                .ctd_bfc(cache_dir), "ChemicalName_GeneEntrezIds")
         }
         term2gene   <- do.call(rbind, lapply(names(entrez_list), function(chem)
             data.frame(term = chem, gene = entrez_list[[chem]],
@@ -284,9 +279,8 @@ enrichment_CTD <- function(x,
             gs       <- .filter_gene_sets(cache_dir, interaction_types)
             term2gene <- gs$symbols
         } else {
-            e <- new.env(parent = emptyenv())
-            load(file.path(cache_dir, "ChemicalName_GeneSymbols.rda"), envir = e)
-            term2gene <- e$ChemicalName_GeneSymbols
+            term2gene <- .ctd_cache_load(
+                .ctd_bfc(cache_dir), "ChemicalName_GeneSymbols")
         }
         sym_map <- suppressMessages(AnnotationDbi::mapIds(
             org.Hs.eg.db::org.Hs.eg.db,
@@ -337,9 +331,8 @@ enrichment_CTD <- function(x,
     if (!is.null(interaction_types)) {
         entrez_sets <- .filter_gene_sets(cache_dir, interaction_types)$entrez
     } else {
-        e <- new.env(parent = emptyenv())
-        load(file.path(cache_dir, "ChemicalName_GeneEntrezIds.rda"), envir = e)
-        entrez_sets <- e$ChemicalName_GeneEntrezIds
+        entrez_sets <- .ctd_cache_load(
+            .ctd_bfc(cache_dir), "ChemicalName_GeneEntrezIds")
     }
     gene_table <- as.data.frame(x)
     gene_table <- gene_table[!is.na(gene_table$EntrezID), ]
@@ -386,17 +379,15 @@ enrichment_CTD <- function(x,
 #'   and \code{symbols} (data frame with columns \code{term}, \code{gene}).
 #' @keywords internal
 .filter_gene_sets <- function(cache_dir, interaction_types) {
-    e <- new.env(parent = emptyenv())
-    path <- file.path(cache_dir, "ctd_interactions.rda")
-    if (!file.exists(path))
+    bfc <- .ctd_bfc(cache_dir)
+    if (!.ctd_cache_has(bfc, "ctd_interactions"))
         stop(
-            "ctd_interactions.rda not found in cache. ",
+            "ctd_interactions not found in cache. ",
             "Please re-run import_CTD() to rebuild the cache with ",
             "interaction-type support.",
             call. = FALSE
         )
-    load(path, envir = e)
-    ia   <- e$ctd_interactions
+    ia   <- .ctd_cache_load(bfc, "ctd_interactions")
     keep <- !is.na(ia$InteractionActions) &
         vapply(ia$InteractionActions, function(x)
             any(interaction_types %in% strsplit(x, "|", fixed = TRUE)[[1]]),
