@@ -4,6 +4,7 @@
 \name{CTDFile}
 \alias{CTDFile}
 \alias{.CTDFile}
+\alias{CTDFile-class}
 \alias{import,CTDFile,ANY,ANY-method}
 \title{CTD Chemical-Gene Interactions File}
 \usage{

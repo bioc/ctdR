@@ -51,10 +51,12 @@
 #'
 #' @name CTDFile
 #' @rdname CTDFile
+#' @aliases CTDFile-class
 #' @importClassesFrom BiocIO BiocFile
 #' @importMethodsFrom BiocIO import
 #' @importFrom BiocIO resource
 #' @importFrom S4Vectors DataFrame
+#' @importFrom methods new
 #' @exportClass CTDFile
 .CTDFile <- setClass("CTDFile", contains = "BiocFile")
 

@@ -8,3 +8,6 @@
 ^_pkgdown\.yml$
 ^pkgdown$
 ^\.sestante$
+^\.code_reader$
+^\.coding_agent$
+^tests/testthat/_problems$

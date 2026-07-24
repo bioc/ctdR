@@ -116,6 +116,8 @@ import_CTD("~/Downloads/CTD_chem_gene_ixns.csv")
 
 The data is now cached locally. You only need to do this once (or again when you download a newer CTD release).
 
+`import_CTD()` also accepts a URL in place of a local path; remote files are downloaded and cached via `BiocFileCache`, with a one-time reminder pointing to the CTD data-licensing terms. The package assumes no default URL, so you always supply the source yourself.
+
 ### Step 3 — Run enrichment analysis
 
 The first argument of `enrichment_CTD()` is polymorphic and named `x`:
@@ -178,6 +180,22 @@ plot_CTD(camera_results, type = "bar")  # colour encodes Direction
 # GSVA: heatmap of the top-variance chemicals across samples
 plot_CTD(gsva_scores)
 ```
+
+### Utilities and interoperability
+
+```r
+# Read a CTD file into a DataFrame via the Bioconductor import() convention
+library(BiocIO)
+ctd <- import(CTDFile("~/Downloads/CTD_chem_gene_ixns.csv"))
+
+# Retrieve processed tables from the cache
+chem <- ctd_cache("chemicals")
+
+# Export the CTD gene sets for a third-party engine (e.g. EnrichmentBrowser)
+gene_sets <- as_genesets_CTD("entrez")
+```
+
+In `ctdR`, **CTD** always means the *Comparative Toxicogenomics Database*. It is unrelated to the CRAN package `CTD` ("Connect The Dots") and to the `ctd` (CellTypeDataset) object used by `EWCE`.
 
 ## End-to-end runnable example
 

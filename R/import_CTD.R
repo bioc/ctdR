@@ -115,7 +115,8 @@ import_CTD <- function(file_path) {
             length(ambiguous), " ChemicalID(s) appear with more than one ",
             "ChemicalName in the CTD file; only the first name per ID is ",
             "retained. Affected IDs: ",
-            paste(head(ambiguous, 5L), collapse = ", "),
+            paste(ambiguous[seq_len(min(5L, length(ambiguous)))],
+                collapse = ", "),
             if (length(ambiguous) > 5L)
                 paste0(" ... (and ", length(ambiguous) - 5L, " more)"),
             call. = FALSE
