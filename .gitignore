@@ -16,3 +16,6 @@ ctdR.Rcheck/
 
 # vignette HTML è artefatto di rmarkdown::render(), non sorgente
 vignettes/*.html
+
+# testthat CheckReporter failure snapshots
+tests/testthat/_problems/
