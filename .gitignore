@@ -19,3 +19,6 @@ vignettes/*.html
 
 # testthat CheckReporter failure snapshots
 tests/testthat/_problems/
+
+# internal code-reader inbox (never publish)
+.code_reader/
