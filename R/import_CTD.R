@@ -43,8 +43,12 @@
 #' not here — so a single import supports any combination of filters without
 #' re-running this step.
 #'
-#' @param file_path Character. Path to the CTD chemical-gene interactions file
-#'   (\code{CTD_chem_gene_ixns.csv} or \code{CTD_chem_gene_ixns.csv.gz}).
+#' @param file_path Character. A local path \strong{or} a URL to the CTD
+#'   chemical-gene interactions file (\code{CTD_chem_gene_ixns.csv} or
+#'   \code{CTD_chem_gene_ixns.csv.gz}). Remote URLs are downloaded and cached
+#'   with \pkg{BiocFileCache}; the package assumes no default URL, so you supply
+#'   the source and a one-time CTD data-licensing reminder is shown on first
+#'   remote fetch.
 #'
 #' @return Invisible \code{NULL}. Called for its side effect of caching the
 #'   processed data.
@@ -62,20 +66,13 @@
 #' @importFrom BiocFileCache bfccache
 #' @export
 import_CTD <- function(file_path) {
-    if (!file.exists(file_path)) {
-        stop("File not found: ", file_path, "\n",
-            "Please download CTD_chem_gene_ixns.csv.gz from:\n",
-            "  https://ctdbase.org/reports/",
-            "CTD_chem_gene_ixns.csv.gz\n",
-            call. = FALSE
-        )
-    }
+    src <- .resolve_ctd_source(file_path)
 
     bfc <- .ctd_bfc()
 
     t0 <- proc.time()[["elapsed"]]
 
-    CTD_chem_gene_ixns <- .read_and_validate_ctd(file_path)
+    CTD_chem_gene_ixns <- .read_and_validate_ctd(src)
 
     chemicals_ids <- unique(CTD_chem_gene_ixns$ChemicalID)
     gene_maps <- .map_chemical_genes(CTD_chem_gene_ixns, chemicals_ids)

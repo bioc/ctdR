@@ -7,8 +7,12 @@
 import_CTD(file_path)
 }
 \arguments{
-\item{file_path}{Character. Path to the CTD chemical-gene interactions file
-(\code{CTD_chem_gene_ixns.csv} or \code{CTD_chem_gene_ixns.csv.gz}).}
+\item{file_path}{Character. A local path \strong{or} a URL to the CTD
+chemical-gene interactions file (\code{CTD_chem_gene_ixns.csv} or
+\code{CTD_chem_gene_ixns.csv.gz}). Remote URLs are downloaded and cached
+with \pkg{BiocFileCache}; the package assumes no default URL, so you supply
+the source and a one-time CTD data-licensing reminder is shown on first
+remote fetch.}
 }
 \value{
 Invisible \code{NULL}. Called for its side effect of caching the

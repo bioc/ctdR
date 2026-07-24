@@ -72,15 +72,7 @@ CTDFile <- function(resource) {
 #' @rdname CTDFile
 #' @exportMethod import
 setMethod("import", c(con = "CTDFile"), function(con, format, text, ...) {
-    src <- resource(con)
-    is_url <- grepl("^(https?|ftp)://", src)
-    if (!is_url && !file.exists(src)) {
-        stop("File not found: ", src, "\n",
-            "Please download CTD_chem_gene_ixns.csv.gz from:\n",
-            "  https://ctdbase.org/reports/CTD_chem_gene_ixns.csv.gz",
-            call. = FALSE
-        )
-    }
+    src <- .resolve_ctd_source(resource(con))
     ctd <- .read_and_validate_ctd(src)
     S4Vectors::DataFrame(
         as.data.frame(ctd, stringsAsFactors = FALSE),
