@@ -1,3 +1,14 @@
+# Changes in version 0.99.11
+
+## Documentation
+
+* The installation instructions in the vignette and the README now reflect
+  that ctdR has been accepted into Bioconductor. They said the package was
+  still under review and pointed to GitHub as the only source. The package
+  is currently available in Bioconductor devel (3.24) and will install from
+  the standard repository after the next Bioconductor release; GitHub
+  remains available for the latest development version.
+
 # Changes in version 0.99.10
 
 ## Infrastructure
